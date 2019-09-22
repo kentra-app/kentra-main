@@ -1,0 +1,24 @@
+{
+  "name": "@kentra/core",
+  "version": "0.0.0",
+  "description": "> TODO: description",
+  "author": "Rolf van de Krol <info@rolfvandekrol.nl>",
+  "homepage": "",
+  "license": "ISC",
+  "main": "lib/core.js",
+  "typings": "lib/core.d.ts",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "tsc": "tsc",
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  }
+}
