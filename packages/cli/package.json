@@ -20,5 +20,11 @@
   "scripts": {
     "tsc": "tsc",
     "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "dependencies": {
+    "yargs": "^14.0.0"
+  },
+  "devDependencies": {
+    "@types/yargs": "^13.0.2"
   }
 }
