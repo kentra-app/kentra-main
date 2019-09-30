@@ -1,1 +1,1 @@
-console.log("Core")
+export * from "./dependencies"
