@@ -12,7 +12,11 @@ describe("core", () => {
         ["e", Set()],
       ])
 
-      const state = core.depResolve(graph, "a", core.emptyResolveState())
+      const state = core.internalDependencyResolver(
+        graph,
+        "a",
+        core.emptyResolverState()
+      )
 
       expect(state.error).toBeFalsy()
       expect(state.unresolved.size).toEqual(0)
@@ -29,7 +33,11 @@ describe("core", () => {
         ["e", Set(["a"])],
       ])
 
-      const state = core.depResolve(graph, "a", core.emptyResolveState())
+      const state = core.internalDependencyResolver(
+        graph,
+        "a",
+        core.emptyResolverState()
+      )
 
       expect(state.error).toBeTruthy()
     })
@@ -42,7 +50,11 @@ describe("core", () => {
         ["c", Set(["d"])],
       ])
 
-      const state = core.depResolve(graph, "a", core.emptyResolveState())
+      const state = core.internalDependencyResolver(
+        graph,
+        "a",
+        core.emptyResolverState()
+      )
 
       expect(state.error).toBeTruthy()
     })
