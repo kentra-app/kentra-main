@@ -2,7 +2,7 @@ import { List } from "immutable"
 import { chunkList, unchunkLists } from "./lists"
 
 /**
- * A simple function that returns a Promise.
+ * A simple function that returns a Promise
  *
  * We provide different mechanisms for running multiple async operations at the
  * same time. If we would write those mechanisms directly on Promise objects,
@@ -51,15 +51,11 @@ export const allPromises = <A>(
   list: List<PromiseProvider<A>>
 ): PromiseProvider<List<A>> => () =>
   Promise.all<A>(
-    list
-      .map(
-        (promiseProvider: PromiseProvider<A>): Promise<A> => promiseProvider()
-      )
-      .toArray()
+    list.map((p: PromiseProvider<A>): Promise<A> => p()).toArray()
   ).then<List<A>>(l => List<A>(l))
 
 /**
- * Parallel controller that runs the Promises at the same time
+ * Parallel controller that runs the Promises in chunks
  *
  * This function is a mix between allPromises and consecutivePromises. It
  * chunks the list of PromiseProviders, and then consecutively handles the
@@ -67,13 +63,14 @@ export const allPromises = <A>(
  * without waiting.
  *
  * Internally, the conversion is like this.
- *  * It starts with List<PromiseProvider<A>>
+ *  * It starts with List<PromiseProvider<A>>.
  *  * chunkList (see lists helpers) converts this to
- *    List<List<PromiseProvider<A>>>
- *  * Using allPromises, this is converted to List<PromiseProvider<List<A>>>
+ *    List<List<PromiseProvider<A>>>. The conversion is controlled by the
+ *    chunkSize argument.
+ *  * Using allPromises, this is converted to List<PromiseProvider<List<A>>>.
  *  * Using consecutivePromises, this is converted to
- *    PromiseProvider<List<List<A>>>
- *  * Using unchunkLists, this is converted to PromiseProvider<List<List<A>>
+ *    PromiseProvider<List<List<A>>>.
+ *  * Using unchunkLists, this is converted to PromiseProvider<List<A>>.
  *
  * @param promiseProviders List<PromiseProvider<A>>
  * @param chunkSize number
