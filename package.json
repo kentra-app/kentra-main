@@ -15,5 +15,10 @@
     "tslint-config-prettier": "^1.18.0",
     "typescript": "^3.6.3"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "scripts": {
+    "compile": "lerna run tsc",
+    "test": "jest",
+    "publish": "lerna run tsc && lerna publish"
+  }
 }
