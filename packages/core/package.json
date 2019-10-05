@@ -1,6 +1,6 @@
 {
   "name": "@kentra/core",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "> TODO: description",
   "author": "Rolf van de Krol <info@rolfvandekrol.nl>",
   "homepage": "",
@@ -22,7 +22,7 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "dependencies": {
-    "@kentra/helpers": "^0.0.0",
+    "@kentra/helpers": "^0.0.1",
     "immutable": "^4.0.0-rc.12"
   }
 }
