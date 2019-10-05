@@ -44,7 +44,7 @@ export interface RawDependencies {
 export const emptyRawDependencies = (): RawDependencies => ({})
 export const isRawDependencies = (data: any): data is Dependencies =>
   Object.getOwnPropertyNames(data).every(
-    property =>
+    (property: string) =>
       data[property] !== undefined && typeof data[property] === "string"
   )
 
@@ -63,7 +63,7 @@ export const parseDependencies = (
   dependencies: RawDependencies
 ): Dependencies =>
   Object.getOwnPropertyNames(dependencies).reduce<Dependencies>(
-    (memo, name) => memo.set(name, dependencies[name]),
+    (memo: Dependencies, name: string) => memo.set(name, dependencies[name]),
     Map()
   )
 
