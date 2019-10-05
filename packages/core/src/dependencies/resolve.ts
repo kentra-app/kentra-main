@@ -1,37 +1,11 @@
-import { List, Map, OrderedSet, Set } from "immutable"
-import { Dependencies, emptyDependencies } from "./config"
+import { Map, OrderedSet, Set } from "immutable"
 
-export type DependenciesGraph = Map<string, Dependencies>
-export type SimpleDependenciesGraph = Map<string, Set<string>>
-export type DependenciesVersions = Map<string, Set<string>>
+import * as helpers from "@kentra/helpers"
 
-export const mergeDepedencies = (
-  ...dependencies: Dependencies[]
-): Dependencies =>
-  dependencies.reduce((a, b) => ({ ...a, ...b }), emptyDependencies())
-
-const getDependenciesVersionsFromDependencies = (
-  dependencies: Dependencies
-): DependenciesVersions => dependencies.map<Set<string>>(v => Set([v]))
-
-const mergeDependenciesVersions = (
-  ...versionsList: DependenciesVersions[]
-): DependenciesVersions =>
-  versionsList.reduce<DependenciesVersions>(
-    (memo: DependenciesVersions, versions: DependenciesVersions) =>
-      memo.mergeWith((a, b) => a.merge(b), versions),
-    Map()
-  )
-
-export const getDependenciesVersionsFromGraph = (
-  graph: DependenciesGraph
-): DependenciesVersions =>
-  mergeDependenciesVersions(
-    ...Array.from(graph.values()).map(getDependenciesVersionsFromDependencies)
-  )
+import { SimpleDependenciesGraph } from "./types"
 
 export interface ResolverState {
-  error: boolean
+  error: false | string
   resolved: OrderedSet<string>
   unresolved: OrderedSet<string>
 }
@@ -52,7 +26,7 @@ export const internalDependencyResolver = (
     ? {
         // Error state, because node is not found
         ...initialState,
-        error: true,
+        error: `Node '${node}' not found`,
       }
     : ((state: ResolverState): ResolverState =>
         state.error
@@ -71,7 +45,7 @@ export const internalDependencyResolver = (
             state.error || state.resolved.includes(dependency)
               ? state // Return state if error or already resolved
               : state.unresolved.includes(dependency)
-              ? { ...state, error: true } // Return error if loop detected
+              ? { ...state, error: `Loop detected involving node '${node}'` } // Return error if loop detected
               : internalDependencyResolver(graph, dependency, state),
           {
             // Add the current node to the unresolved list
@@ -81,4 +55,19 @@ export const internalDependencyResolver = (
         )
       )
 
-// export const resolveDependencies = (graph: SimpleDependenciesGraph):
+export const resolveDependencies = (
+  graph: SimpleDependenciesGraph,
+  node: string
+): helpers.Result<OrderedSet<string>, string> => {
+  const internalResult = internalDependencyResolver(
+    graph,
+    node,
+    emptyResolverState()
+  )
+
+  if (internalResult.error) {
+    return helpers.error(internalResult.error)
+  }
+
+  return helpers.ok(internalResult.resolved)
+}
